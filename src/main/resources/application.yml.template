@@ -1,0 +1,7 @@
+# this is a template for app configuration
+
+micronaut:
+  application:
+    name:
+
+discord.webhook: #the last part of the webhook url after https://discordapp.com/api/webhooks/
