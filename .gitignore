@@ -1,8 +1,16 @@
+Thumbs.db
+.DS_Store
 .gradle
 build/
-
-# Ignore Gradle GUI config
-gradle-app.setting
+target/
+out/
+.idea
+*.iml
+*.ipr
+*.iws
+.project
+.settings
+.classpath
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
