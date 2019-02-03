@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import java.nio.file.Paths
 import java.nio.file.WatchEvent
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY
+import static java.nio.file.StandardWatchEventKinds.*
 
 @Context
 @Slf4j
@@ -34,9 +34,33 @@ class LogReaderService {
 				.subscribe(this.&dirChange)
 	}
 
+	private long lastByte = 0
+
 	private void dirChange(WatchEvent event) {
-		if (event.context().toString() == logFile && event.kind() == ENTRY_MODIFY) {
-			println new File("$logDir/$logFile").text
+		try {
+			if (event.context().toString() == logFile) {
+				switch (event.kind()) {
+					case ENTRY_MODIFY:
+						def file = new File("$logDir/$logFile")
+						if (lastByte > file.size()) lastByte = 0
+
+						def bytes = new byte[file.size() - lastByte]
+						file.newInputStream().tap {
+							skip(lastByte) //jump to last position
+							read(bytes)
+						}
+						lastByte += bytes.size()
+
+						println new String(bytes)
+
+						break
+					case [ENTRY_CREATE, ENTRY_DELETE]:
+						lastByte = 0
+						break
+				}
+			}
+		} catch (Exception ex) {
+			log.error "Exception processing file change event", ex
 		}
 	}
 }
