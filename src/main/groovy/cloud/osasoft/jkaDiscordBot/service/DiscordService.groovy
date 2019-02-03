@@ -23,7 +23,9 @@ class DiscordService {
 	@Inject
 	private RxHttpClient client
 
-	boolean sendMessage(String message) {
+	void sendMessage(String message) {
+		if (!message) return
+
 		def payload = [
 				content: message
 		]

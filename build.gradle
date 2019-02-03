@@ -8,7 +8,6 @@ apply plugin:"groovy"
 
 version "0.1"
 group "cloud.osasoft"
-applicationName "JKA Discord Bot"
 
 repositories {
     mavenLocal()
@@ -29,6 +28,8 @@ dependencies {
     compile "io.micronaut:micronaut-validation"
     compileOnly "io.micronaut:micronaut-inject-groovy"
     runtime "ch.qos.logback:logback-classic:1.2.3"
+
+    compile 'de.helmbold:rxfilewatcher:1.0.0'
 
     testCompile "io.micronaut:micronaut-inject-groovy"
     testCompile("org.spockframework:spock-core") {
