@@ -4,4 +4,9 @@ micronaut:
   application:
     name:
 
+jka:
+  log:
+    directory: #directory containing log file, eg. /home/jka/GameData
+    file: #log file, eg. log.txt
+
 discord.webhook: #the last part of the webhook url after https://discordapp.com/api/webhooks/
