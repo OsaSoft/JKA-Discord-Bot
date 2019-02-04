@@ -1,6 +1,6 @@
 package cloud.osasoft.jkaDiscordBot.service
 
-import cloud.osasoft.jkaDiscordBot.parser.LogParser
+
 import org.spockframework.util.NotThreadSafe
 import spock.lang.Specification
 import spock.lang.Subject
@@ -13,7 +13,7 @@ class FileReaderServiceTest extends Specification {
 	FileReaderService fileReaderService
 
 	DiscordService discordService = Mock()
-	LogParser logParser = Mock()
+	LogParserService logParser = Mock()
 
 	ThreadLocal<File> logFile = new ThreadLocal<>()
 

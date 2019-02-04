@@ -1,6 +1,5 @@
 package cloud.osasoft.jkaDiscordBot.service
 
-import cloud.osasoft.jkaDiscordBot.parser.LogParser
 import de.helmbold.rxfilewatcher.PathObservables
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -21,19 +20,19 @@ class FileReaderService {
 	private final String dir
 	private final String file
 
-	private final LogParser logParser
+	private final LogParserService logParserService
 	private final DiscordService discordService
 
 	FileReaderService(
 			@Value('${jka.log.directory}') String dir,
 			@Value('${jka.log.file}') String file,
-			LogParser logParser,
+			LogParserService logParserService,
 			DiscordService discordService
 	) {
 		this.dir = dir
 		this.file = file
 		this.discordService = discordService
-		this.logParser = logParser
+		this.logParserService = logParserService
 
 		log.info "Starting watching $dir for changes to $file"
 		PathObservables
@@ -63,7 +62,7 @@ class FileReaderService {
 						log.debug "Read $bytes.length bytes"
 						lastByte += bytes.size()
 
-						discordService.sendMessage(logParser.parse(bytes))
+						discordService.sendMessage(logParserService.parse(bytes))
 						break
 					case [ENTRY_CREATE, ENTRY_DELETE]:
 						log.debug "Watch event: File has been ${event.kind() == ENTRY_CREATE ? 'CREATED' : 'DELETED'}"
