@@ -35,8 +35,8 @@ dependencies {
     testCompile("org.spockframework:spock-core") {
         exclude group: "org.codehaus.groovy", module: "groovy-all"
     }
-    testCompile "io.micronaut:micronaut-inject-java"
     testCompile "org.hamcrest:hamcrest-all:1.3"
+    testCompile 'cglib:cglib-nodep:3.2.6'
 }
 
 shadowJar {
@@ -45,7 +45,7 @@ shadowJar {
 
 run.jvmArgs('-noverify', '-XX:TieredStopAtLevel=1')
 
-mainClassName = "jka.discord.bot.Application"
+mainClassName = "cloud.osasoft.jkaDiscordBot.Application"
 tasks.withType(GroovyCompile) {
     groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
 }
