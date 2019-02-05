@@ -33,7 +33,7 @@ class ChatParserTest extends Specification {
 		expect:
 			with(chatParser.parse(line)) {
 				author?.name == expAuthor
-				getTitle() == expContent
+				description == expContent
 			}
 
 		where:

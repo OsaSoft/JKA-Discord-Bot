@@ -3,6 +3,7 @@ package cloud.osasoft.jkaDiscordBot.service
 import cloud.osasoft.jkaDiscordBot.dto.discord.DiscordEmbed
 import cloud.osasoft.jkaDiscordBot.dto.discord.DiscordMessage
 import cloud.osasoft.jkaDiscordBot.parser.LogParser
+import cloud.osasoft.jkaDiscordBot.util.Utils
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -31,7 +32,7 @@ class LogParserService {
 	}
 
 	DiscordEmbed parseLine(String line) {
-		return parsers.find { it.matches(line) }.parse(stripColours(line))
+		return parsers.find { it.matches(line) }.parse(Utils.stripColours(line))
 	}
 
 //	private List<String> pars(String[] lines) {
@@ -39,9 +40,6 @@ class LogParserService {
 //
 //		lines.each { msg ->
 //			switch (msg) {
-//				case ~/^broadcast: .*/:
-//					parsed << msg - "broadcast: "
-//					break
 //				case ~/^Kill: .*/:
 //					parsed << msg - "Kill: "
 //					break
@@ -55,11 +53,6 @@ class LogParserService {
 //		}
 //		return parsed
 //	}
-
-	private String stripColours(String line) {
-		//clean up colors in names and chat (TODO: figure out if its possible to display them in discord)
-		return line.replaceAll("\\^\\d", "")
-	}
 
 //	private boolean matchesAllowed(String s) {
 //				s.startsWith("ADMIN CMD EXECUTED")

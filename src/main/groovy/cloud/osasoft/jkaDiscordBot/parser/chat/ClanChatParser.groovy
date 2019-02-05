@@ -20,7 +20,7 @@ class ClanChatParser extends ChatParser {
 	DiscordEmbed parse(String line) {
 		DiscordEmbed embed = super.parse(line)
 		embed.color = 16711680 //red
-		embed.title = "<Clan> " + embed.title
+		embed.title = "Clan chat"
 
 		return embed
 	}

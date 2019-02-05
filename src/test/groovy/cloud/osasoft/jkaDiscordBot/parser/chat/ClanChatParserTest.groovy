@@ -37,15 +37,16 @@ class ClanChatParserTest extends Specification {
 		expect:
 			with(clanChatParser.parse(line)) {
 				author?.name == expAuthor
-				getTitle() == expContent
+				title == "Clan chat"
+				description == expContent
 				color == 16711680
 			}
 
 		where:
 			line                                          | expAuthor             | expContent
-			"say_clan: =JM=ShadowSnake<GD>: Dont hug me"  | "=JM=ShadowSnake<GD>" | "<Clan> Dont hug me"
-			"say_clan: NameWith:InIt: test"               | "NameWith:InIt"       | "<Clan> test"
-			"say_clan:    : my name is blank!"            | "   "                 | "<Clan> my name is blank!"
-			"say_clan: n00b: can I use : in my messages?" | "n00b"                | "<Clan> can I use : in my messages?"
+			"say_clan: =JM=ShadowSnake<GD>: Dont hug me"  | "=JM=ShadowSnake<GD>" | "Dont hug me"
+			"say_clan: NameWith:InIt: test"               | "NameWith:InIt"       | "test"
+			"say_clan:    : my name is blank!"            | "   "                 | "my name is blank!"
+			"say_clan: n00b: can I use : in my messages?" | "n00b"                | "can I use : in my messages?"
 	}
 }

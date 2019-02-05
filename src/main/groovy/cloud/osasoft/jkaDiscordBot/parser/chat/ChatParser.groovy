@@ -28,7 +28,7 @@ class ChatParser implements LogParser {
 		def (author, content) = [line[0..separator - 1], line[separator + 2..-1]]
 
 		embed.author = new DiscordAuthor(name: author)
-		embed.title = content
+		embed.description = content
 
 		return embed
 	}
