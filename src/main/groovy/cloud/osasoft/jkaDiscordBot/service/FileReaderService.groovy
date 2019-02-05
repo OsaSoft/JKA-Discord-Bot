@@ -15,58 +15,42 @@ import static java.nio.file.StandardWatchEventKinds.*
 @Context
 @Slf4j
 @CompileStatic
-class LogReaderService {
+class FileReaderService {
 
-	private final String logDir
-	private final String logFile
+	private final String dir
+	private final String file
 
+	private final LogParserService logParserService
 	private final DiscordService discordService
 
-	LogReaderService(
-			@Value('${jka.log.directory}') String logDir,
-			@Value('${jka.log.file}') String logFile,
+	FileReaderService(
+			@Value('${jka.log.directory}') String dir,
+			@Value('${jka.log.file}') String file,
+			LogParserService logParserService,
 			DiscordService discordService
 	) {
-		this.logDir = logDir
-		this.logFile = logFile
+		this.dir = dir
+		this.file = file
 		this.discordService = discordService
+		this.logParserService = logParserService
 
-		log.info "Starting watching $logDir for changes to $logFile"
+		log.info "Starting watching $dir for changes to $file"
 		PathObservables
-				.watchNonRecursive(Paths.get(logDir))
+				.watchNonRecursive(Paths.get(dir))
 				.subscribeOn(Schedulers.newThread())
 				.subscribe(this.&dirChange)
-	}
-
-	//TODO this shouldnt be in LogReaderService
-	private void sendMessage(byte[] bytes) {
-		def messages = new String(bytes).split("\n")
-		log.debug "Changes to file: \n $messages"
-
-		discordService.sendMessage(messages.findAll { matchesAllowed(it) }.join("\n"))
-	}
-
-	private boolean matchesAllowed(String s) {
-		s.startsWith("broadcast:") ||
-				s.startsWith("Kill:") ||
-				s.startsWith("say:") ||
-				s.startsWith("tell:") ||
-				s.startsWith("say_clan:") ||
-				s.startsWith("say_admin:") ||
-				s.startsWith("ADMIN CMD EXECUTED") ||
-				s ==~ /^.*is logged.*/
 	}
 
 	private long lastByte = 0
 
 	private void dirChange(WatchEvent event) {
 		try {
-			if (event.context().toString() == logFile) {
+			if (event.context().toString() == file) {
 				switch (event.kind()) {
 					case ENTRY_MODIFY:
 						log.debug "Watch event: File has been modified"
 
-						def file = new File("$logDir/$logFile")
+						def file = new File((dir ? "$dir/" : "") + file)
 						if (lastByte > file.size()) lastByte = 0
 
 						def bytes = new byte[file.size() - lastByte]
@@ -78,7 +62,7 @@ class LogReaderService {
 						log.debug "Read $bytes.length bytes"
 						lastByte += bytes.size()
 
-						sendMessage(bytes)
+						discordService.sendMessage(logParserService.parse(bytes))
 						break
 					case [ENTRY_CREATE, ENTRY_DELETE]:
 						log.debug "Watch event: File has been ${event.kind() == ENTRY_CREATE ? 'CREATED' : 'DELETED'}"

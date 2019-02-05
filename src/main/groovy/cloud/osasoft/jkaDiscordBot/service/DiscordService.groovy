@@ -1,5 +1,6 @@
 package cloud.osasoft.jkaDiscordBot.service
 
+import cloud.osasoft.jkaDiscordBot.dto.discord.DiscordMessage
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import io.micronaut.context.annotation.Value
@@ -23,19 +24,15 @@ class DiscordService {
 	@Inject
 	private RxHttpClient client
 
-	void sendMessage(String message) {
+	void sendMessage(DiscordMessage message) {
 		if (!message) return
-
-		def payload = [
-				content: message
-		]
 
 		try {
 			log.debug "Sending message to $webhook"
-			client.exchange(POST(webhook, payload), String).blockingFirst()
+			client.exchange(POST(webhook, message), String).blockingFirst()
 		} catch (Exception ex) {
 			log.error "Error POSTing to Discord", ex
-			log.debug "Payload was: $payload"
+			log.debug "Payload was: $message"
 		}
 	}
 }
