@@ -1,5 +1,6 @@
 package cloud.osasoft.jkaDiscordBot.service
 
+
 import de.helmbold.rxfilewatcher.PathObservables
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -62,7 +63,9 @@ class FileReaderService {
 						log.debug "Read $bytes.length bytes"
 						lastByte += bytes.size()
 
-						discordService.sendMessage(logParserService.parse(bytes))
+
+						def discordMessage = logParserService.parse(bytes)
+						if (discordMessage) discordService.sendMessage(discordMessage)
 						break
 					case [ENTRY_CREATE, ENTRY_DELETE]:
 						log.debug "Watch event: File has been ${event.kind() == ENTRY_CREATE ? 'CREATED' : 'DELETED'}"

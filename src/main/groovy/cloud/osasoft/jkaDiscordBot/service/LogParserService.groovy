@@ -6,6 +6,7 @@ import cloud.osasoft.jkaDiscordBot.parser.LogParser
 import cloud.osasoft.jkaDiscordBot.util.Utils
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import io.micronaut.core.util.CollectionUtils
 
 import javax.inject.Singleton
 
@@ -26,13 +27,18 @@ class LogParserService {
 
 		def message = new DiscordMessage()
 
-		message.embeds.addAll(lines.collect(this.&parseLine))
+		def embeds = lines.collect(this.&parseLine).findAll { it != null }
+
+		if (!embeds) return null
+
+		message.embeds.addAll(embeds)
 
 		return message
 	}
 
 	DiscordEmbed parseLine(String line) {
-		return parsers.find { it.matches(line) }.parse(Utils.stripColours(line))
+		line = Utils.stripColours(line)
+		return parsers.find { it.matches(line) }?.parse(line)
 	}
 
 //	private List<String> pars(String[] lines) {
