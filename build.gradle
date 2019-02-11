@@ -23,9 +23,7 @@ dependencyManagement {
 
 dependencies {
     compile "io.micronaut:micronaut-http-client"
-    compile "io.micronaut:micronaut-http-server-netty"
     compile "io.micronaut:micronaut-runtime-groovy"
-    compile "io.micronaut:micronaut-validation"
     compileOnly "io.micronaut:micronaut-inject-groovy"
     runtime "ch.qos.logback:logback-classic:1.2.3"
 
